@@ -28,8 +28,7 @@ All documentation will be written with the assumption that you are already reaso
 
 When building this image, support for the following features have been compiled into the server binaries.
 
-- Boost
-- Lua
+- Lua (luajit)
 - Protobuf
 - ipcipher
 - libsodium
@@ -39,6 +38,8 @@ When building this image, support for the following features have been compiled 
 - SNMP
 - DNS over TLS (DoT)
 - DNS over HTTP (DoH)
+- GnuTLS
+- OpenSSL
 - lmdb
 
 ## Supported tags
