@@ -47,11 +47,11 @@ When building this image, support for the following features have been compiled 
 
 ### Alpine Linux
 
-- 1.6.1, 1.6.1-alpine, 1.6.1-alpine-3.14, latest
+- 1.6.1, 1.6.1-alpine, 1.6.1-alpine-3.14, alpine, latest
 
 ### Debian Linux
 
-- *1.6.1-debian, 1.6.1-debian-11.1-slim
+- *1.6.1-debian, 1.6.1-debian-11.1-slim, debian
 
 ## Deploying this image
 
