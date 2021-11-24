@@ -52,7 +52,7 @@ When building this image, support for the following features have been compiled 
 
 ### Debian Linux
 
-- *1.6.1-debian, 1.6.1-debian-11.1-slim, debian
+- 1.6.1-debian, 1.6.1-debian-11.1-slim, debian
 
 ## Deploying this image
 
@@ -80,7 +80,7 @@ This would result in the following line being added to the /etc/pdns/dnsdist.con
 
 #### Approach #2
 
-With this approach, you may create traditional PowerDNS dnsdist server conf files and map them to a specific location inside of the container. This will cause each mapped configuration file to be loaded each time the container is started. For example, say your Docker / Podman host has a PowerDNS dnsdist server conf file stored at /srv/pdns-dnsdist.conf and you want to load that in your PowerDNS dnsdist server container. You will created a volume mapping that will link the conf file on the host to a specific location in the container. The mapping would look something like this;
+With this approach, you may create traditional PowerDNS dnsdist server conf files and map them to a specific location inside of the container. This will cause each mapped configuration file to be loaded each time the container is started. For example, say your Docker / Podman host has a PowerDNS dnsdist server conf file stored at /srv/pdns-dnsdist.conf and you want to load that in your PowerDNS dnsdist server container. You will create a volume mapping that will link the conf file on the host to a specific location in the container. The mapping would look something like this;
 
     /srv/pdns-dnsdist.conf:/etc/pdns/dnsdist.conf
 
@@ -97,7 +97,7 @@ To run this image using Docker Compose, create a YAML file with a name and place
     version: "3.3"
     services:
       proxy:
-        image: azoriansolutions/powerdns-dnsdist:latest
+        image: azoriansolutions/powerdns-dnsdist
         restart: unless-stopped
         environment:
           - PDNS_LINE1=newServer({address="1.1.1.1", qps=1})
