@@ -1,5 +1,5 @@
-ARG DISTRO=alpine
-ARG DISTRO_TAG=3.14
+ARG DISTRO=debian
+ARG DISTRO_TAG=11.1-slim
 
 FROM ${DISTRO}:${DISTRO_TAG}
 
@@ -10,12 +10,13 @@ ENV PDNS_setuid=${PDNS_setuid:-pdns} \
   PDNS_daemon=${PDNS_daemon:-no} \
   AS_PDNS_VERSION=${AS_PDNS_VERSION}
 
-RUN apk update \
-  && apk add g++ make pkgconfig gnutls-dev libedit-dev fstrm-dev openssl-dev \
-  h2o-dev libcap-dev libsodium-dev lmdb-dev net-snmp-dev nghttp2-dev \
-  protobuf-dev re2-dev python3 py3-virtualenv py3-pip boost-dev \
-  boost-serialization boost-system boost-thread boost-context lua5.3-dev \
-  luajit-dev \
+RUN apt update \
+  && apt -y install g++ make pkg-config libssl-dev libsnmp-dev gnutls-dev \
+  libedit-dev libfstrm-dev libssl-dev libh2o-dev libh2o-evloop-dev libcap-dev \
+  libsodium-dev liblmdb-dev libsnmp-dev libnghttp2-dev libprotobuf-dev \
+  libre2-dev python3-venv python3-pip libboost-dev libboost-serialization-dev \
+  libboost-system-dev libboost-thread-dev libboost-context-dev \
+  libluajit-5.1-dev \
   && pip3 install --no-cache-dir envtpl
 
 COPY src/dnsdist-${AS_PDNS_VERSION}.tar.bz2 /tmp/
@@ -33,8 +34,7 @@ RUN mv /srv/entrypoint.sh / \
   && rm -rf /tmp/dnsdist-${AS_PDNS_VERSION} \
   && mkdir -p /etc/pdns/conf.d \
   && mkdir -p /var/run/dnsdist \
-  && addgroup ${PDNS_setgid} 2>/dev/null \
-  && adduser -S -s /bin/false -H -h /tmp -G ${PDNS_setgid} ${PDNS_setuid} 2>/dev/null \
+  && adduser --system --disabled-login --no-create-home --home /tmp --shell /bin/false --group ${PDNS_setgid} 2>/dev/null \
   && chown -R ${PDNS_setuid}:${PDNS_setgid} /etc/pdns/conf.d /var/run/dnsdist
 
 EXPOSE 53/udp 53

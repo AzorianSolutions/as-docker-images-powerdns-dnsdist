@@ -2,8 +2,6 @@
 
 [ -n "$DEBUG" ] && [ "$DEBUG" -gt 0 ] && set -x
 
-set -eo pipefail
-
 convert_file_vars() {
     for line in $(env)
     do

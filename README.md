@@ -16,7 +16,7 @@ dnsdist is dynamic, its configuration language is Lua and it can be changed at r
 
 ## TL;DR
 
-    docker run -d -p 12053:53/udp -p 12053:53 -e PDNS_LINE1=newServer({address="1.1.1.1", qps=1}) azoriansolutions/powerdns-dnsdist
+    docker run -d -p 12053:53/udp -p 12053:53 -e PDNS_LINE1=newServer({address="1.1.1.1", qps=1}) azoriansolutions/powerdns-dnsdist:debian
 
 ## Azorian Solutions Docker image strategy
 
@@ -28,8 +28,7 @@ All documentation will be written with the assumption that you are already reaso
 
 When building this image, support for the following features have been compiled into the server binaries.
 
-- Boost
-- Lua
+- Lua (luajit)
 - Protobuf
 - ipcipher
 - libsodium
@@ -39,6 +38,8 @@ When building this image, support for the following features have been compiled 
 - SNMP
 - DNS over TLS (DoT)
 - DNS over HTTP (DoH)
+- GnuTLS
+- OpenSSL
 - lmdb
 
 ## Supported tags
@@ -47,11 +48,11 @@ When building this image, support for the following features have been compiled 
 
 ### Alpine Linux
 
-- 1.6.1, 1.6.1-alpine, 1.6.1-alpine-3.14, latest
+- 1.6.1, 1.6.1-alpine, 1.6.1-alpine-3.14, alpine, latest
 
 ### Debian Linux
 
-- *1.6.1-debian, 1.6.1-debian-11.1-slim
+- 1.6.1-debian, 1.6.1-debian-11.1-slim, debian
 
 ## Deploying this image
 
@@ -79,7 +80,7 @@ This would result in the following line being added to the /etc/pdns/dnsdist.con
 
 #### Approach #2
 
-With this approach, you may create traditional PowerDNS dnsdist server conf files and map them to a specific location inside of the container. This will cause each mapped configuration file to be loaded each time the container is started. For example, say your Docker / Podman host has a PowerDNS dnsdist server conf file stored at /srv/pdns-dnsdist.conf and you want to load that in your PowerDNS dnsdist server container. You will created a volume mapping that will link the conf file on the host to a specific location in the container. The mapping would look something like this;
+With this approach, you may create traditional PowerDNS dnsdist server conf files and map them to a specific location inside of the container. This will cause each mapped configuration file to be loaded each time the container is started. For example, say your Docker / Podman host has a PowerDNS dnsdist server conf file stored at /srv/pdns-dnsdist.conf and you want to load that in your PowerDNS dnsdist server container. You will create a volume mapping that will link the conf file on the host to a specific location in the container. The mapping would look something like this;
 
     /srv/pdns-dnsdist.conf:/etc/pdns/dnsdist.conf
 
@@ -87,7 +88,7 @@ With this approach, you may create traditional PowerDNS dnsdist server conf file
 
 To run a simple container on Docker with this image, execute the following Docker command;
 
-    docker run -d -p 12053:53/udp -p 12053:53 -e PDNS_LINE1=newServer({address="1.1.1.1", qps=1}) azoriansolutions/powerdns-dnsdist
+    docker run -d -p 12053:53/udp -p 12053:53 -e PDNS_LINE1=newServer({address="1.1.1.1", qps=1}) azoriansolutions/powerdns-dnsdist:debian
 
 ### Deploy with Docker Compose
 
@@ -96,7 +97,7 @@ To run this image using Docker Compose, create a YAML file with a name and place
     version: "3.3"
     services:
       proxy:
-        image: azoriansolutions/powerdns-dnsdist:latest
+        image: azoriansolutions/powerdns-dnsdist:debian
         restart: unless-stopped
         environment:
           - PDNS_LINE1=newServer({address="1.1.1.1", qps=1})
@@ -118,19 +119,19 @@ The build-release command has the following parameter format;
 
     build-release IMAGE_TAG_NAME PDNS_VERSION DISTRO_REPO_NAME DISTRO_TAG
 
-So for example, to build the PowerDNS dnsdist server version 1.6.0 on Alpine Linux 3.14, you would execute the following shell command:
+So for example, to build the PowerDNS dnsdist server version 1.6.0 on Debian Linux 11.1-slim, you would execute the following shell command:
 
-    build-release 1.6.0-alpine-3.14 1.6.0 alpine 3.14
+    build-release 1.6.0-debian-11.1-slim 1.6.0 debian 11.1-slim
 
 The build-realease command assumes the following parameter defaults;
 
 - Image Tag Name: latest
 - PDNS Version: 1.6.1
-- Distro Name: alpine
-- Distro Tag: 3.14
+- Distro Name: debian
+- Distro Tag: 11.1-slim
 
 This means that running the build-release command with no parameters would be the equivalent of executing the following shell command:
 
-    build-release latest 1.6.1 alpine 3.14
+    build-release latest 1.6.1 debian 11.1-slim
 
 When the image is tagged during compilation, the repository portion of the image tag is derived from the contents of the .as/docker-registry file and the tag from the first parameter provided to the build-release command.
